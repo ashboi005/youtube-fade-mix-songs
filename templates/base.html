@@ -759,6 +759,138 @@
             }
         }
         
+        // Import/Export Functions
+        function parseTimeToSeconds(timeStr) {
+            // Convert MM:SS or M:SS to seconds
+            const parts = timeStr.split(':');
+            const minutes = parseInt(parts[0]) || 0;
+            const seconds = parseInt(parts[1]) || 0;
+            return minutes * 60 + seconds;
+        }
+        
+        function secondsToTimeFormat(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function importPlaylist(input) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const playlist = JSON.parse(e.target.result);
+                    loadPlaylistData(playlist);
+                } catch (error) {
+                    alert('Error reading JSON file: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        function loadPlaylistData(playlist) {
+            // Clear existing songs
+            const container = document.getElementById('songs-container');
+            container.innerHTML = '';
+            
+            // Add songs from playlist
+            playlist.songs.forEach((song, index) => {
+                const newSong = document.createElement('div');
+                newSong.className = 'song-form';
+                
+                const startSeconds = parseTimeToSeconds(song.startTime);
+                const endSeconds = parseTimeToSeconds(song.endTime);
+                
+                const songData = {
+                    youtubeUrl: song.url,
+                    startTime: startSeconds,
+                    endTime: endSeconds,
+                    fadeIn: song.fadeIn || 2,
+                    fadeOut: song.fadeOut || 2
+                };
+                
+                newSong.innerHTML = createSongHTML(index, songData);
+                container.appendChild(newSong);
+                
+                // Trigger video info loading
+                setTimeout(() => getVideoInfo(index), 100 * index);
+            });
+            
+            saveSongs();
+            alert(`Imported ${playlist.songs.length} songs from "${playlist.name || 'Playlist'}"`);
+        }
+        
+        function exportPlaylist() {
+            const songs = [];
+            const songForms = document.querySelectorAll('.song-form');
+            
+            songForms.forEach((form, index) => {
+                const url = form.querySelector(`[name="youtube_url_${index}"]`).value;
+                const startTime = parseFloat(form.querySelector(`[name="start_time_${index}"]`).value || 0);
+                const endTime = parseFloat(form.querySelector(`[name="end_time_${index}"]`).value || 30);
+                const fadeIn = parseFloat(form.querySelector(`[name="fade_in_${index}"]`).value || 2);
+                const fadeOut = parseFloat(form.querySelector(`[name="fade_out_${index}"]`).value || 2);
+                
+                if (url) {
+                    songs.push({
+                        url: url,
+                        startTime: secondsToTimeFormat(startTime),
+                        endTime: secondsToTimeFormat(endTime),
+                        fadeIn: fadeIn,
+                        fadeOut: fadeOut
+                    });
+                }
+            });
+            
+            const playlist = {
+                name: "My Mixtape",
+                description: "Exported from YouTube Mixtape Generator",
+                songs: songs
+            };
+            
+            const blob = new Blob([JSON.stringify(playlist, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'mixtape_playlist.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        function loadDemoPlaylist() {
+            const demoPlaylist = {
+                "name": "Demo Mixtape - First 3 Songs",
+                "description": "A sample of the full 20-song collection",
+                "songs": [
+                    {
+                        "url": "https://youtu.be/3n0Y3k16QpA?si=MxwUVQD6oXUub_WV",
+                        "startTime": "0:16",
+                        "endTime": "1:34",
+                        "fadeIn": 2,
+                        "fadeOut": 2
+                    },
+                    {
+                        "url": "https://youtu.be/ekr2nIex040?si=jVdcXi403B9BpYAq",
+                        "startTime": "0:33",
+                        "endTime": "1:00",
+                        "fadeIn": 2,
+                        "fadeOut": 2
+                    },
+                    {
+                        "url": "https://youtu.be/1EadhOBcfI0?si=xFbJjHfTAsxkv1wW",
+                        "startTime": "0:00",
+                        "endTime": "1:17",
+                        "fadeIn": 2,
+                        "fadeOut": 2
+                    }
+                ]
+            };
+            
+            loadPlaylistData(demoPlaylist);
+        }
+        
         // Add floating emojis
         function createFloatingEmojis() {
             const emojis = ['🎵', '🎶', '🎧', '🎤', '🎸', '🎹', '🎺', '🎻', '🥁', '🎼', '💿', '📀'];

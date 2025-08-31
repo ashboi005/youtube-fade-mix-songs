@@ -51,7 +51,7 @@ def check_tools():
 def download_youtube_audio_cnvmp3(url, output_path):
     """Download YouTube audio using cnvmp3.com service"""
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
+    # chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
@@ -368,73 +368,36 @@ def concatenate_audio(input_files, output_file):
     return output_file
 
 def create_overlapping_mixtape(segment_files, fade_durations, output_file, overlap_duration=3.0):
-    """Create a mixtape with overlapping crossfades between segments"""
+    """Create a mixtape with crossfades between segments"""
     if len(segment_files) == 1:
         song_info = fade_durations[0]
         segment_duration = get_audio_duration(segment_files[0])
         apply_fades(segment_files[0], output_file, song_info['fadeIn'], song_info['fadeOut'], segment_duration)
         return output_file
     
-    cmd = ['ffmpeg']
+    # For now, let's use simple concatenation with proper fades
+    # This ensures audio starts immediately and volume is consistent
+    processed_files = []
     
-    # Add all input files
-    for segment_file in segment_files:
-        cmd.extend(['-i', str(segment_file)])
-    
-    filter_complex = []
-    current_output = '[0:a]'
-    
-    # Process each segment with fades and overlapping
-    for i in range(len(segment_files)):
+    for i, segment_file in enumerate(segment_files):
         song_info = fade_durations[i]
         fade_in = song_info['fadeIn']
         fade_out = song_info['fadeOut']
         
-        segment_duration = get_audio_duration(segment_files[i])
-        fade_out_start = max(0, segment_duration - fade_out)
+        faded_file = segment_file.parent / f"faded_{i}.mp3"
+        segment_duration = get_audio_duration(segment_file)
         
-        # Apply fades to this segment
-        fade_filters = []
-        if fade_in > 0:
-            fade_filters.append(f"afade=t=in:d={fade_in}")
-        if fade_out > 0:
-            fade_filters.append(f"afade=t=out:st={fade_out_start}:d={fade_out}")
-        
-        if fade_filters:
-            filter_complex.append(f"[{i}:a]{','.join(fade_filters)}[faded{i}]")
-            track_ref = f'[faded{i}]'
-        else:
-            track_ref = f'[{i}:a]'
-        
-        if i == 0:
-            current_output = track_ref
-        else:
-            # Calculate delay for overlapping effect
-            total_previous_duration = 0
-            for j in range(i):
-                prev_duration = get_audio_duration(segment_files[j])
-                total_previous_duration += prev_duration
-            
-            delay_time = max(0, total_previous_duration - (overlap_duration * i))
-            
-            # Add delay and mix with previous output
-            filter_complex.append(f"{track_ref}adelay={int(delay_time * 1000)}|{int(delay_time * 1000)}[delayed{i}]")
-            filter_complex.append(f"{current_output}[delayed{i}]amix=inputs=2:duration=longest[mixed{i}]")
-            current_output = f'[mixed{i}]'
+        # Apply fades with proper volume
+        apply_fades(segment_file, faded_file, fade_in, fade_out, segment_duration)
+        processed_files.append(faded_file)
     
-    # Final resampling
-    filter_complex.append(f"{current_output}aresample=44100[out]")
+    # Simple concatenation - this ensures audio starts immediately and proper volume
+    print(f"🎵 Creating mixtape with {len(processed_files)} tracks and proper fades...")
+    concatenate_audio(processed_files, output_file)
     
-    cmd.extend(['-filter_complex', ';'.join(filter_complex)])
-    cmd.extend(['-map', '[out]'])
-    cmd.extend(['-acodec', 'libmp3lame', '-b:a', '192k', '-y', str(output_file)])
-    
-    print(f"🎵 Creating overlapping mixtape with {overlap_duration}s crossfades...")
-    
-    result = subprocess.run(cmd, capture_output=True, text=True)
-    if result.returncode != 0:
-        print(f"❌ FFMPEG overlapping failed: {result.stderr}")
-        print("🔄 Falling back to simple concatenation...")
-        return concatenate_audio(segment_files, output_file)
+    # Clean up faded files
+    for faded_file in processed_files:
+        if faded_file.exists():
+            faded_file.unlink()
     
     return output_file

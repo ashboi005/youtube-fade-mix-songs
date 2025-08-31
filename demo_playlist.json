@@ -1,0 +1,153 @@
+{
+  "name": "Demo Mixtape",
+  "description": "A collection of YouTube tracks with timestamps",
+  "songs": [
+    {
+      "url": "https://youtu.be/3n0Y3k16QpA?si=MxwUVQD6oXUub_WV",
+      "startTime": "0:16",
+      "endTime": "1:34",
+      "fadeIn": 0,
+      "fadeOut": 2
+    },
+    {
+      "url": "https://youtu.be/ekr2nIex040?si=jVdcXi403B9BpYAq",
+      "startTime": "0:33",
+      "endTime": "1:00",
+      "fadeIn": 2,
+      "fadeOut": 2
+    },
+    {
+      "url": "https://youtu.be/1EadhOBcfI0?si=xFbJjHfTAsxkv1wW",
+      "startTime": "0:00",
+      "endTime": "1:17",
+      "fadeIn": 2,
+      "fadeOut": 2
+    },
+    {
+      "url": "https://youtu.be/2qBWL5Fplu0?si=GE6V3g6ukOoKo7CR",
+      "startTime": "0:57",
+      "endTime": "1:51",
+      "fadeIn": 2,
+      "fadeOut": 2
+    },
+    {
+      "url": "https://youtu.be/wDIrpvH8MzE?si=M3ErVHuE_Cnrpz9F",
+      "startTime": "0:00",
+      "endTime": "1:15",
+      "fadeIn": 2,
+      "fadeOut": 2
+    },
+    {
+      "url": "https://youtu.be/8p8ZIE3riEU?si=r3aPST4NLSmNbjvL",
+      "startTime": "0:00",
+      "endTime": "1:10",
+      "fadeIn": 2,
+      "fadeOut": 2
+    },
+    {
+      "url": "https://youtu.be/qnV9vgVKAa4?si=chs8bZ8KQFnSm4Rx",
+      "startTime": "0:20",
+      "endTime": "1:00",
+      "fadeIn": 2,
+      "fadeOut": 2
+    },
+    {
+      "url": "https://youtu.be/Hwi8E2CM_mA?si=nfRnqx9ihi5Xxjxp",
+      "startTime": "0:15",
+      "endTime": "1:00",
+      "fadeIn": 2,
+      "fadeOut": 2
+    },
+    {
+      "url": "https://youtu.be/oe_vBsDbYeY?si=HM4c9bsgghKPmRpK",
+      "startTime": "0:00",
+      "endTime": "1:09",
+      "fadeIn": 2,
+      "fadeOut": 2
+    },
+    {
+      "url": "https://youtu.be/GrPQlFU2S7I?si=bhLU1qn48hd5N2mb",
+      "startTime": "0:00",
+      "endTime": "1:25",
+      "fadeIn": 2,
+      "fadeOut": 2
+    },
+    {
+      "url": "https://youtu.be/shGcSPQwAVY?si=9nqpu5jNAHHOiFPE",
+      "startTime": "0:14",
+      "endTime": "0:58",
+      "fadeIn": 2,
+      "fadeOut": 2
+    },
+    {
+      "url": "https://youtu.be/m1vjkSfQYI8?si=kNejP0ea1YgzowcT",
+      "startTime": "0:21",
+      "endTime": "0:43",
+      "fadeIn": 2,
+      "fadeOut": 2
+    },
+    {
+      "url": "https://youtu.be/DNldClaQGqs?si=3v30ZaOP1OR9K23L",
+      "startTime": "0:10",
+      "endTime": "0:38",
+      "fadeIn": 2,
+      "fadeOut": 2
+    },
+    {
+      "url": "https://youtu.be/mIURqzmGx-k?si=hjB3VSnaY6mEKjBS",
+      "startTime": "0:34",
+      "endTime": "0:59",
+      "fadeIn": 2,
+      "fadeOut": 2
+    },
+    {
+      "url": "https://youtu.be/A09tYbtMICQ?si=dM_9fEb2DRkeQcrr",
+      "startTime": "0:14",
+      "endTime": "0:55",
+      "fadeIn": 2,
+      "fadeOut": 2
+    },
+    {
+      "url": "https://youtu.be/wHIUFb4zcrA?si=qNmNirRb2I_jFZCv",
+      "startTime": "0:52",
+      "endTime": "1:24",
+      "fadeIn": 2,
+      "fadeOut": 2
+    },
+    {
+      "url": "https://youtu.be/nh76HvVztzY?si=nFxFC4_uGDT_kjPO",
+      "startTime": "0:00",
+      "endTime": "1:10",
+      "fadeIn": 2,
+      "fadeOut": 2
+    },
+    {
+      "url": "https://youtu.be/yZHP2azvYl4?si=cPPjkoPyV2VgI19S",
+      "startTime": "0:00",
+      "endTime": "1:01",
+      "fadeIn": 2,
+      "fadeOut": 2
+    },
+    {
+      "url": "https://youtu.be/ImnYPjOd1Tw?si=jfXma3AqMUDk_IjX",
+      "startTime": "0:00",
+      "endTime": "0:51",
+      "fadeIn": 2,
+      "fadeOut": 2
+    },
+    {
+      "url": "https://youtu.be/PedIWd5aQT4?si=KGzaiULiQBzHziUg",
+      "startTime": "0:00",
+      "endTime": "1:30",
+      "fadeIn": 2,
+      "fadeOut": 1
+    },
+    {
+      "url": "https://youtu.be/PedIWd5aQT4?si=KGzaiULiQBzHziUg",
+      "startTime": "2:45",
+      "endTime": "2:58",
+      "fadeIn": 1,
+      "fadeOut": 2
+    }
+  ]
+}

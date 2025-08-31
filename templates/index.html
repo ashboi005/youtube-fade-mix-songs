@@ -102,6 +102,24 @@
         </div>
     </div>
     
+    <!-- Import/Export Section -->
+    <div class="import-export" style="text-align: center; margin: 30px 0; padding: 20px; background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 15px; border: 2px dashed #6c757d;">
+        <h3 style="margin-bottom: 15px; color: #333;">📁 Import/Export Playlist</h3>
+        <div style="display: flex; gap: 15px; justify-content: center; align-items: center; flex-wrap: wrap;">
+            <input type="file" id="jsonImport" accept=".json" style="display: none;" onchange="importPlaylist(this)">
+            <button type="button" class="btn btn-primary" onclick="document.getElementById('jsonImport').click()">
+                📥 Import JSON
+            </button>
+            <button type="button" class="btn btn-primary" onclick="exportPlaylist()">
+                📤 Export JSON
+            </button>
+            <button type="button" class="btn btn-primary" onclick="loadDemoPlaylist()">
+                🎵 Load Demo
+            </button>
+        </div>
+        <p style="margin-top: 10px; color: #666; font-size: 0.9em;">Import/export playlists with timestamps in MM:SS format</p>
+    </div>
+    
     <!-- Action Buttons -->
     <div class="actions">
         <button type="button" class="btn btn-primary" onclick="addSong()">
