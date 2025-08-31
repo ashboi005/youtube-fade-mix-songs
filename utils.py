@@ -51,7 +51,7 @@ def check_tools():
 def download_youtube_audio_cnvmp3(url, output_path):
     """Download YouTube audio using cnvmp3.com service"""
     chrome_options = Options()
-    # chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
@@ -344,7 +344,7 @@ def get_audio_duration(audio_file):
         raise Exception(f"Invalid duration format: {result.stdout.strip()}")
 
 def concatenate_audio(input_files, output_file):
-    """Concatenate multiple audio files into one using FFMPEG"""
+    """Concatenate multiple audio files into one using FFMPEG with proper re-encoding"""
     concat_file = output_file.parent / f"concat_{uuid.uuid4().hex}.txt"
     
     with open(concat_file, 'w') as f:
@@ -354,7 +354,10 @@ def concatenate_audio(input_files, output_file):
     cmd = [
         'ffmpeg', '-f', 'concat', '-safe', '0',
         '-i', str(concat_file),
-        '-c', 'copy',
+        '-acodec', 'libmp3lame',  # Force MP3 encoding
+        '-b:a', '192k',           # Set bitrate
+        '-ar', '44100',           # Set sample rate
+        '-ac', '2',               # Set to stereo
         '-y',
         str(output_file)
     ]
