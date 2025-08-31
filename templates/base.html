@@ -13,71 +13,96 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             min-height: 100vh;
             padding: 20px;
             color: #333;
         }
         
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
         .container {
             max-width: 900px;
             margin: 0 auto;
-            background: white;
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         h1 {
             text-align: center;
-            color: #333;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
-            font-size: 2.5em;
+            font-size: 2.8em;
+            font-weight: 800;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .subtitle {
             text-align: center;
             color: #666;
             margin-bottom: 30px;
-            font-size: 1.1em;
-        }
-        
-        .alert {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            font-size: 1.2em;
             font-weight: 500;
         }
         
+        .alert {
+            padding: 18px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+        
+        .alert:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
         .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: #333;
         }
         
         .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: #333;
         }
         
         .alert-warning {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeaa7;
+            background: linear-gradient(135deg, #feca57, #ff9ff3);
+            color: #333;
         }
         
         .tool-status {
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            padding: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 20px;
+            padding: 25px;
+            color: white;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
             margin-bottom: 30px;
         }
         
         .tool-status h3 {
             margin-bottom: 15px;
-            color: #333;
+            color: white;
+            font-size: 1.3em;
         }
         
         .tool-item {
@@ -92,11 +117,35 @@
         }
         
         .song-form {
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            border: none;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .song-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .song-form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .song-form:hover::before {
+            left: 100%;
         }
         
         .song-header {
@@ -128,17 +177,21 @@
         }
         
         .remove-btn {
-            background: #dc3545;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
             color: white;
             border: none;
             padding: 8px 15px;
-            border-radius: 5px;
+            border-radius: 20px;
             cursor: pointer;
             font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
         }
         
         .remove-btn:hover {
-            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
         }
         
         .form-group {
@@ -160,18 +213,25 @@
         
         input {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
+            padding: 15px;
+            border: 2px solid transparent;
+            border-radius: 15px;
             font-size: 16px;
-            background: white;
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
             color: #333;
+            transition: all 0.3s ease;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1), inset -2px -2px 5px rgba(255,255,255,0.8);
         }
         
         input:focus {
             outline: none;
             border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3), inset 2px 2px 5px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        input:hover {
+            box-shadow: inset 2px 2px 8px rgba(0,0,0,0.15), inset -2px -2px 8px rgba(255,255,255,0.9);
         }
         
         .duration-info {
@@ -185,42 +245,70 @@
         
         .actions {
             display: flex;
-            gap: 15px;
+            gap: 20px;
             justify-content: center;
-            margin: 30px 0;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        
+        .actions .btn {
+            min-width: 160px;
+            position: relative;
+            font-size: 17px;
         }
         
         .btn {
             padding: 12px 25px;
             border: none;
-            border-radius: 8px;
+            border-radius: 25px;
             font-size: 16px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
             text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+        
+        .btn:hover::before {
+            width: 200px;
+            height: 200px;
         }
         
         .btn-primary {
-            background: #667eea;
+            background: linear-gradient(45deg, #667eea, #764ba2);
             color: white;
         }
         
         .btn-primary:hover {
-            background: #5a6fd8;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
         
         .btn-success {
-            background: #28a745;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
             color: white;
         }
         
         .btn-success:hover {
-            background: #218838;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
         }
         
         .btn-large {
@@ -670,6 +758,67 @@
                 urlInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }
+        
+        // Add floating emojis
+        function createFloatingEmojis() {
+            const emojis = ['🎵', '🎶', '🎧', '🎤', '🎸', '🎹', '🎺', '🎻', '🥁', '🎼', '💿', '📀'];
+            
+            for (let i = 0; i < 12; i++) {
+                const emoji = document.createElement('div');
+                emoji.className = 'floating-emoji';
+                emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                emoji.style.left = Math.random() * 100 + '%';
+                emoji.style.top = Math.random() * 100 + '%';
+                emoji.style.animationDelay = Math.random() * 6 + 's';
+                emoji.style.position = 'fixed';
+                emoji.style.fontSize = (Math.random() * 1.5 + 0.5) + 'em';
+                emoji.style.pointerEvents = 'none';
+                emoji.style.zIndex = '-1';
+                emoji.style.opacity = '0.3';
+                document.body.appendChild(emoji);
+            }
+        }
+        
+        // Initialize floating emojis when page loads
+        document.addEventListener('DOMContentLoaded', createFloatingEmojis);
+        
+        // Add CSS animations for floating emojis
+        const style = document.createElement('style');
+        style.textContent = `
+            .floating-emoji {
+                animation: float 8s ease-in-out infinite;
+            }
+            
+            @keyframes float {
+                0%, 100% { 
+                    transform: translateY(0px) rotate(0deg); 
+                    opacity: 0.2;
+                }
+                25% { 
+                    transform: translateY(-30px) rotate(90deg); 
+                    opacity: 0.4;
+                }
+                50% { 
+                    transform: translateY(-60px) rotate(180deg); 
+                    opacity: 0.3;
+                }
+                75% { 
+                    transform: translateY(-30px) rotate(270deg); 
+                    opacity: 0.4;
+                }
+            }
+            
+            .floating-emoji:nth-child(odd) {
+                animation-delay: -2s;
+                animation-duration: 10s;
+            }
+            
+            .floating-emoji:nth-child(even) {
+                animation-delay: -5s;
+                animation-duration: 12s;
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
