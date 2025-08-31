@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="success-page">
+    <div class="success-icon">🎉</div>
+    <h2>Your mixtape is ready!</h2>
+    <p style="margin: 20px 0; color: #666; font-size: 1.1em;">
+        Your custom mixtape has been created successfully with smooth fade transitions.
+    </p>
+    
+    <div style="margin: 30px 0;">
+        <a href="{{ url_for('download_mixtape', session_id=session_id) }}" 
+           class="btn btn-success btn-large">
+            📥 Download Mixtape (MP3)
+        </a>
+    </div>
+    
+    <div style="margin-top: 30px;">
+        <a href="{{ url_for('index') }}" class="btn btn-primary">
+            🎵 Create Another Mixtape
+        </a>
+    </div>
+    
+    <div class="alert alert-warning" style="margin-top: 30px; text-align: left;">
+        <strong>📝 Note:</strong> Your mixtape will be automatically deleted after 1 hour to save server space. 
+        Make sure to download it now!
+    </div>
+</div>
+{% endblock %}
+

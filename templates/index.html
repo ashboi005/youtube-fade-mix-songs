@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Tool Status -->
+<div class="tool-status">
+    <h3>🔧 System Status</h3>
+    <div class="tool-item">
+        <span class="status">{{ '✅' if tools.yt_dlp else '❌' }}</span>
+        <span>yt-dlp (YouTube downloader)</span>
+    </div>
+    <div class="tool-item">
+        <span class="status">{{ '✅' if tools.ffmpeg else '❌' }}</span>
+        <span>FFMPEG (Audio processing)</span>
+    </div>
+    
+    {% if not tools.yt_dlp or not tools.ffmpeg %}
+    <div class="alert alert-warning" style="margin-top: 15px;">
+        <strong>Missing tools:</strong>
+        {% if not tools.yt_dlp %}Install yt-dlp: <code>pip install yt-dlp</code>{% endif %}
+        {% if not tools.ffmpeg %}Install FFMPEG: <a href="https://ffmpeg.org/" target="_blank">https://ffmpeg.org/</a>{% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<!-- Main Form -->
+<form method="POST" action="{{ url_for('create_mixtape') }}">
+    <div id="songs-container">
+        <!-- First Song (always present) -->
+        <div class="song-form">
+            <div class="song-header">
+                <h3 onclick="toggleSongDetails(0)" style="cursor: pointer; display: flex; align-items: center; margin: 0;">
+                    <span class="collapse-arrow" id="arrow_0" style="margin-right: 8px; transition: transform 0.2s;">▼</span>
+                    <span id="song_title_0">🎵 Song 1</span>
+                </h3>
+                <div>
+                    <button type="button" class="btn btn-primary" onclick="moveSongUp(this)" style="padding: 5px 10px; margin-right: 5px;">↑</button>
+                    <button type="button" class="btn btn-primary" onclick="moveSongDown(this)" style="padding: 5px 10px; margin-right: 5px;">↓</button>
+                </div>
+            </div>
+            
+            <div class="song-details" id="details_0">
+                <div class="form-group">
+                    <label for="youtube_url_0">📺 YouTube URL:</label>
+                    <input type="url" 
+                           name="youtube_url_0" 
+                           id="youtube_url_0"
+                           placeholder="https://www.youtube.com/watch?v=..."
+                           onchange="saveSongs(); getVideoInfo(0)"
+                           onpaste="setTimeout(() => getVideoInfo(0), 100)"
+                           style="width: 100%;"
+                           required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="start_time_0">⏰ Start Time (seconds):</label>
+                        <input type="number" 
+                               name="start_time_0" 
+                               id="start_time_0"
+                               value="0" 
+                               min="0" 
+                               step="0.1"
+                               onchange="saveSongs()">
+                    </div>
+                    <div class="form-group">
+                        <label for="end_time_0">⏱️ End Time (seconds):</label>
+                        <input type="number" 
+                               name="end_time_0" 
+                               id="end_time_0"
+                               value="30" 
+                               min="0" 
+                               step="0.1"
+                               onchange="saveSongs()">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fade_in_0">🔄 Fade In (seconds):</label>
+                        <input type="number" 
+                               name="fade_in_0" 
+                               id="fade_in_0"
+                               value="2" 
+                               min="0" 
+                               max="10" 
+                               step="0.1"
+                               onchange="saveSongs()">
+                    </div>
+                    <div class="form-group">
+                        <label for="fade_out_0">🔄 Fade Out (seconds):</label>
+                        <input type="number" 
+                               name="fade_out_0" 
+                               id="fade_out_0"
+                               value="2" 
+                               min="0" 
+                               max="10" 
+                               step="0.1"
+                               onchange="saveSongs()">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="actions">
+        <button type="button" class="btn btn-primary" onclick="addSong()">
+            ➕ Add Song
+        </button>
+        <button type="button" class="btn btn-primary" onclick="clearAllSongs()" style="background: #6c757d;">
+            🗑️ Clear All
+        </button>
+        <button type="submit" class="btn btn-success" 
+                {{ 'disabled' if not tools.yt_dlp or not tools.ffmpeg else '' }}>
+            🎵 Create Mixtape
+        </button>
+    </div>
+</form>
+
+<!-- Instructions -->
+<div class="instructions">
+    <h3>📋 How to Use:</h3>
+    <ol>
+        <li><strong>Add YouTube URLs:</strong> Paste links to your favorite videos</li>
+        <li><strong>Set Timing:</strong> Choose start/end times in seconds</li>
+        <li><strong>Add Fades:</strong> Set fade durations for smooth transitions (2-3 seconds recommended)</li>
+        <li><strong>Add More Songs:</strong> Click "Add Song" for multiple tracks</li>
+        <li><strong>Create Mixtape:</strong> Click the button and wait for processing</li>
+        <li><strong>Download:</strong> Get your custom MP3 file!</li>
+    </ol>
+    
+    <div class="alert alert-warning" style="margin-top: 15px;">
+        <strong>💡 Tips:</strong>
+        <ul style="margin-top: 10px; padding-left: 20px;">
+            <li>Watch YouTube videos first to find exact timestamps</li>
+            <li>Use 2-3 second fades for most music genres</li>
+            <li>Keep segments under 10 minutes for faster processing</li>
+            <li><strong>Video info loads automatically</strong> when you paste a URL</li>
+            <li>If a video fails, try a <strong>different video</strong> - some are region-blocked</li>
+        </ul>
+    </div>
+    
+    <div class="alert alert-info" style="margin-top: 15px; background: #f0f9ff; border-left: 4px solid #3b82f6;">
+        <strong>🧪 Try these URLs (click to fill):</strong>
+        <ul style="margin-top: 10px; padding-left: 20px; font-family: monospace; font-size: 0.9em;">
+            <li><a href="#" onclick="fillTestUrl(0, 'https://www.youtube.com/watch?v=dQw4w9WgXcQ')" style="color: #3b82f6;">Rick Astley - Never Gonna Give You Up</a></li>
+            <li><a href="#" onclick="fillTestUrl(0, 'https://www.youtube.com/watch?v=9bZkp7q19f0')" style="color: #3b82f6;">PSY - GANGNAM STYLE</a></li>
+            <li><a href="#" onclick="fillTestUrl(0, 'https://www.youtube.com/watch?v=kJQP7kiw5Fk')" style="color: #3b82f6;">Luis Fonsi - Despacito</a></li>
+        </ul>
+    </div>
+    
+    <div class="alert alert-info" style="margin-top: 15px; background: #f0f9ff; border-left: 4px solid #3b82f6;">
+        <strong>🤖 Selenium-Powered Downloads:</strong>
+        <p style="margin-top: 10px;">This app uses <strong>Selenium web automation</strong> with <a href="https://ytmp3.as/AOPR/" target="_blank" style="color: #3b82f6;">YTMP3.as</a> for reliable YouTube downloads.</p>
+        <ul style="margin-top: 10px; padding-left: 20px;">
+            <li><strong>Bypasses API restrictions</strong> - Uses actual web browser automation</li>
+            <li><strong>High success rate</strong> - Works with most YouTube videos</li>
+            <li><strong>Requires Chrome browser</strong> - Make sure Chrome is installed</li>
+            <li><strong>Automatic processing</strong> - Handles everything in the background</li>
+        </ul>
+    </div>
+    
+    <div class="alert alert-warning" style="margin-top: 15px; background: #fef3c7; border-left: 4px solid #f59e0b;">
+        <strong>⚠️ Requirements:</strong>
+        <ul style="margin-top: 10px; padding-left: 20px;">
+            <li><strong>Chrome browser</strong> must be installed on your system</li>
+            <li><strong>Internet connection</strong> required for YTMP3.as</li>
+            <li><strong>FFMPEG</strong> needed for audio processing</li>
+            <li>Downloads may take <strong>30-60 seconds</strong> per video</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

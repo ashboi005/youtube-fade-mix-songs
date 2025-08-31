@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎵 YouTube Mixtape Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .tool-status {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .tool-status h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .tool-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .tool-item .status {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .song-form {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .song-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .song-header h3 {
+            color: #333;
+            font-size: 1.3em;
+            user-select: none;
+        }
+        
+        .song-header h3:hover {
+            color: #007bff;
+        }
+        
+        .collapse-arrow {
+            color: #007bff;
+            font-size: 0.8em;
+            transition: transform 0.2s ease;
+        }
+        
+        .song-details {
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .remove-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .remove-btn:hover {
+            background: #c82333;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            background: white;
+            color: #333;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .duration-info {
+            background: #e7f3ff;
+            padding: 10px;
+            border-radius: 5px;
+            color: #0066cc;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .btn-large {
+            padding: 15px 40px;
+            font-size: 18px;
+        }
+        
+        .success-page {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .success-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        .instructions {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        
+        .instructions h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .instructions ol {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .song-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 YouTube Mixtape Generator</h1>
+        <p class="subtitle">Create seamless audio mixtapes from YouTube videos</p>
+        
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'error' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </div>
+    
+    <script>
+        // Song management with localStorage persistence
+        let songCount = 1;
+        
+        // Load saved songs on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedSongs();
+        });
+        
+        function saveSongs() {
+            const songs = [];
+            const container = document.getElementById('songs-container');
+            const songForms = container.querySelectorAll('.song-form');
+            
+            songForms.forEach((form, index) => {
+                const song = {
+                    youtubeUrl: form.querySelector(`[name*="youtube_url"]`)?.value || '',
+                    startTime: parseFloat(form.querySelector(`[name*="start_time"]`)?.value || 0),
+                    endTime: parseFloat(form.querySelector(`[name*="end_time"]`)?.value || 30),
+                    fadeIn: parseFloat(form.querySelector(`[name*="fade_in"]`)?.value || 2),
+                    fadeOut: parseFloat(form.querySelector(`[name*="fade_out"]`)?.value || 2)
+                };
+                songs.push(song);
+            });
+            
+            localStorage.setItem('mixtape_songs', JSON.stringify(songs));
+        }
+        
+        function loadSavedSongs() {
+            const saved = localStorage.getItem('mixtape_songs');
+            if (saved) {
+                try {
+                    const songs = JSON.parse(saved);
+                    if (songs.length > 1) {
+                        // Clear existing songs except first one
+                        const container = document.getElementById('songs-container');
+                        while (container.children.length > 1) {
+                            container.removeChild(container.lastChild);
+                        }
+                        
+                        // Load all songs
+                        songs.forEach((song, index) => {
+                            if (index === 0) {
+                                // Update first song
+                                updateSongForm(0, song);
+                            } else {
+                                // Add new songs
+                                addSongWithData(song);
+                            }
+                        });
+                    } else if (songs.length === 1) {
+                        updateSongForm(0, songs[0]);
+                    }
+                } catch (e) {
+                    console.log('Error loading saved songs:', e);
+                }
+            }
+        }
+        
+        function updateSongForm(index, song) {
+            const form = document.getElementById('songs-container').children[index];
+            if (form) {
+                form.querySelector(`[name*="youtube_url"]`).value = song.youtubeUrl || '';
+                form.querySelector(`[name*="start_time"]`).value = song.startTime || 0;
+                form.querySelector(`[name*="end_time"]`).value = song.endTime || 30;
+                form.querySelector(`[name*="fade_in"]`).value = song.fadeIn || 2;
+                form.querySelector(`[name*="fade_out"]`).value = song.fadeOut || 2;
+            }
+        }
+        
+        function addSongWithData(song = null) {
+            const container = document.getElementById('songs-container');
+            const newSong = document.createElement('div');
+            newSong.className = 'song-form';
+            newSong.innerHTML = createSongHTML(songCount, song);
+            container.appendChild(newSong);
+            songCount++;
+            saveSongs();
+        }
+        
+        function createSongHTML(index, song = null) {
+            return `
+                <div class="song-header">
+                    <h3 onclick="toggleSongDetails(${index})" style="cursor: pointer; display: flex; align-items: center; margin: 0;">
+                        <span class="collapse-arrow" id="arrow_${index}" style="margin-right: 8px; transition: transform 0.2s;">▼</span>
+                        <span id="song_title_${index}">🎵 Song ${index + 1}</span>
+                    </h3>
+                    <div>
+                        <button type="button" class="btn btn-primary" onclick="moveSongUp(this)" style="padding: 5px 10px; margin-right: 5px;">↑</button>
+                        <button type="button" class="btn btn-primary" onclick="moveSongDown(this)" style="padding: 5px 10px; margin-right: 5px;">↓</button>
+                        <button type="button" class="remove-btn" onclick="removeSong(this)">Remove</button>
+                    </div>
+                </div>
+                
+                <div class="song-details" id="details_${index}">
+                    <div class="form-group">
+                        <label for="youtube_url_${index}">📺 YouTube URL:</label>
+                        <input type="url" 
+                               name="youtube_url_${index}" 
+                               id="youtube_url_${index}"
+                               value="${song?.youtubeUrl || ''}"
+                               placeholder="https://www.youtube.com/watch?v=..."
+                               onchange="saveSongs(); getVideoInfo(${index})"
+                               onpaste="setTimeout(() => getVideoInfo(${index}), 100)"
+                               style="width: 100%;"
+                               required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="start_time_${index}">⏰ Start Time (seconds):</label>
+                            <input type="number" 
+                                   name="start_time_${index}" 
+                                   id="start_time_${index}"
+                                   value="${song?.startTime || 0}" 
+                                   min="0" 
+                                   step="0.1"
+                                   onchange="saveSongs()">
+                        </div>
+                        <div class="form-group">
+                            <label for="end_time_${index}">⏱️ End Time (seconds):</label>
+                            <input type="number" 
+                                   name="end_time_${index}" 
+                                   id="end_time_${index}"
+                                   value="${song?.endTime || 30}" 
+                                   min="0" 
+                                   step="0.1"
+                                   onchange="saveSongs()">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fade_in_${index}">🔄 Fade In (seconds):</label>
+                            <input type="number" 
+                                   name="fade_in_${index}" 
+                                   id="fade_in_${index}"
+                                   value="${song?.fadeIn || 2}" 
+                                   min="0" 
+                                   max="10" 
+                                   step="0.1"
+                                   onchange="saveSongs()">
+                        </div>
+                        <div class="form-group">
+                            <label for="fade_out_${index}">🔄 Fade Out (seconds):</label>
+                            <input type="number" 
+                                   name="fade_out_${index}" 
+                                   id="fade_out_${index}"
+                                   value="${song?.fadeOut || 2}" 
+                                   min="0" 
+                                   max="10" 
+                                   step="0.1"
+                                   onchange="saveSongs()">
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function addSong() {
+            addSongWithData();
+        }
+        
+        function removeSong(button) {
+            const songForm = button.closest('.song-form');
+            const container = document.getElementById('songs-container');
+            
+            if (container.children.length > 1) {
+                songForm.remove();
+                renumberSongs();
+                saveSongs();
+            }
+        }
+        
+        function moveSongUp(button) {
+            const songForm = button.closest('.song-form');
+            const container = document.getElementById('songs-container');
+            const prevSong = songForm.previousElementSibling;
+            
+            if (prevSong) {
+                container.insertBefore(songForm, prevSong);
+                renumberSongs();
+                saveSongs();
+            }
+        }
+        
+        function moveSongDown(button) {
+            const songForm = button.closest('.song-form');
+            const container = document.getElementById('songs-container');
+            const nextSong = songForm.nextElementSibling;
+            
+            if (nextSong) {
+                container.insertBefore(nextSong, songForm);
+                renumberSongs();
+                saveSongs();
+            }
+        }
+        
+        function renumberSongs() {
+            const container = document.getElementById('songs-container');
+            const songForms = container.querySelectorAll('.song-form');
+            
+            songForms.forEach((form, index) => {
+                // Update the title span and preserve video info if it exists
+                const titleSpan = form.querySelector(`#song_title_${index}`);
+                if (titleSpan) {
+                    // If it has video info, preserve it, otherwise reset to basic title
+                    const currentText = titleSpan.innerHTML;
+                    if (currentText.includes('🔄') || currentText.includes('❌') || currentText.includes('span')) {
+                        // Has video info, just update the song number
+                        titleSpan.innerHTML = currentText.replace(/Song \d+:/, `Song ${index + 1}:`);
+                    } else {
+                        // No video info, set basic title
+                        titleSpan.textContent = `🎵 Song ${index + 1}`;
+                    }
+                    titleSpan.id = `song_title_${index}`;
+                }
+                
+                // Update arrow ID
+                const arrow = form.querySelector('.collapse-arrow');
+                if (arrow) {
+                    arrow.id = `arrow_${index}`;
+                }
+                
+                // Update details div ID
+                const detailsDiv = form.querySelector('.song-details');
+                if (detailsDiv) {
+                    detailsDiv.id = `details_${index}`;
+                }
+                
+                // Update h3 onclick
+                const header = form.querySelector('h3');
+                if (header) {
+                    header.setAttribute('onclick', `toggleSongDetails(${index})`);
+                }
+                
+                // Update input names and IDs
+                const inputs = form.querySelectorAll('input');
+                inputs.forEach(input => {
+                    const name = input.name;
+                    const newName = name.replace(/_\d+$/, `_${index}`);
+                    input.name = newName;
+                    input.id = newName;
+                    
+                    // Update onchange/onpaste events for YouTube URL input
+                    if (newName.includes('youtube_url')) {
+                        input.setAttribute('onchange', `saveSongs(); getVideoInfo(${index})`);
+                        input.setAttribute('onpaste', `setTimeout(() => getVideoInfo(${index}), 100)`);
+                    }
+                });
+                
+                // Update labels
+                const labels = form.querySelectorAll('label');
+                labels.forEach(label => {
+                    const forAttr = label.getAttribute('for');
+                    if (forAttr) {
+                        const newFor = forAttr.replace(/_\d+$/, `_${index}`);
+                        label.setAttribute('for', newFor);
+                    }
+                });
+            });
+        }
+        
+        function clearAllSongs() {
+            if (confirm('Clear all songs? This will remove all your current songs.')) {
+                localStorage.removeItem('mixtape_songs');
+                location.reload();
+            }
+        }
+        
+        function toggleSongDetails(index) {
+            const detailsDiv = document.getElementById(`details_${index}`);
+            const arrow = document.getElementById(`arrow_${index}`);
+            
+            if (detailsDiv.style.display === 'none') {
+                detailsDiv.style.display = 'block';
+                arrow.style.transform = 'rotate(0deg)';
+                arrow.textContent = '▼';
+            } else {
+                detailsDiv.style.display = 'none';
+                arrow.style.transform = 'rotate(-90deg)';
+                arrow.textContent = '▶';
+            }
+        }
+
+        async function getVideoInfo(index) {
+            const urlInput = document.querySelector(`[name="youtube_url_${index}"]`);
+            const titleSpan = document.getElementById(`song_title_${index}`);
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                titleSpan.textContent = `🎵 Song ${index + 1}`;
+                return;
+            }
+            
+            // Show loading state
+            titleSpan.textContent = `🎵 Song ${index + 1}: 🔄 Loading...`;
+            
+            try {
+                const response = await fetch('/get_video_info', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ url: url })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Truncate title if too long
+                    const maxLength = 50;
+                    const truncatedTitle = result.title.length > maxLength 
+                        ? result.title.substring(0, maxLength) + '...'
+                        : result.title;
+                    
+                    titleSpan.innerHTML = `🎵 Song ${index + 1}: <span style="color: #2c3e50; font-weight: 600;">${truncatedTitle}</span> <span style="color: #6c757d; font-size: 0.8em;">(${result.duration_formatted})</span>`;
+                } else {
+                    titleSpan.innerHTML = `🎵 Song ${index + 1}: <span style="color: #ef4444;">❌ ${result.error}</span>`;
+                }
+            } catch (error) {
+                titleSpan.innerHTML = `🎵 Song ${index + 1}: <span style="color: #ef4444;">❌ Network error</span>`;
+            }
+        }
+        
+        async function testUrl(index) {
+            const urlInput = document.querySelector(`[name="youtube_url_${index}"]`);
+            const statusDiv = document.getElementById(`url_status_${index}`);
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                statusDiv.innerHTML = '<span style="color: #f59e0b;">⚠️ Please enter a URL first</span>';
+                return;
+            }
+            
+            statusDiv.innerHTML = '<span style="color: #3b82f6;">🔄 Testing URL...</span>';
+            
+            try {
+                const response = await fetch('/test-url', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ url: url })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    const duration = Math.floor(result.duration / 60);
+                    statusDiv.innerHTML = `<span style="color: #10b981;">✅ "${result.title}" (${duration}m, ${result.audio_formats_count} audio formats)</span>`;
+                } else {
+                    statusDiv.innerHTML = `<span style="color: #ef4444;">❌ Error: ${result.error}</span>`;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<span style="color: #ef4444;">❌ Network error: ${error.message}</span>`;
+            }
+        }
+        
+        function fillTestUrl(index, url) {
+            const urlInput = document.querySelector(`[name="youtube_url_${index}"]`);
+            if (urlInput) {
+                urlInput.value = url;
+                saveSongs();
+                
+                // Trigger automatic video info loading
+                urlInput.dispatchEvent(new Event('input'));
+                
+                // Scroll to the form
+                urlInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    </script>
+</body>
+</html>
